@@ -1,0 +1,11 @@
+<RCC>
+    <qresource prefix="/">
+        <file>Transformation.qml</file>
+        <file>MainForm.ui.qml</file>
+        <file>assets/rocket.jpg</file>
+        <file>Button.qml</file>
+        <file>ClickableImage.qml</file>
+        <file>main_copy.qml</file>
+        <file>main.qml</file>
+    </qresource>
+</RCC>
