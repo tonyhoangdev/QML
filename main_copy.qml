@@ -163,7 +163,7 @@ Window {
         Image {
             x: 10; y: 10
             width: 50; height: 100
-            source: "assets/rocket.jpg"
+            source: "assets/img1.jpg"
             fillMode: Image.PreserveAspectCrop
             clip: false
 
@@ -187,7 +187,7 @@ Window {
         Image {
             anchors.fill: parent
             x: 10; y: 10
-            source: "assets/rocket.jpg"
+            source: "assets/img1.jpg"
             fillMode: Image.PreserveAspectCrop
             clip: true
 

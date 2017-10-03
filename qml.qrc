@@ -1,11 +1,28 @@
 <RCC>
     <qresource prefix="/">
+        <file>assets/img1.jpg</file>
+        <file>assets/background.png</file>
+        <file>assets/rocket.png</file>
         <file>Transformation.qml</file>
         <file>MainForm.ui.qml</file>
-        <file>assets/rocket.jpg</file>
         <file>Button.qml</file>
         <file>ClickableImage.qml</file>
         <file>main_copy.qml</file>
         <file>main.qml</file>
+        <file>assets/blueprint.jpg</file>
+        <file>assets/soccer_ball.png</file>
+        <file>assets/soccer_shadow.png</file>
+        <file>assets/ufo.png</file>
+        <file>assets/ufo_background.png</file>
+        <file>RedSquare.qml</file>
+        <file>GreenSquare.qml</file>
+        <file>BlueSquare.qml</file>
+        <file>column.qml</file>
+        <file>DarkSquare.qml</file>
+        <file>BrightSquare.qml</file>
+        <file>grid.qml</file>
+        <file>row.qml</file>
+        <file>flow.qml</file>
+        <file>repeater.qml</file>
     </qresource>
 </RCC>

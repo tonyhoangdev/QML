@@ -3,8 +3,8 @@ import QtQuick.Window 2.2
 
 Window {
     visible: true
-    width: 640
-    height: 480
+    width: 720
+    height: 640
     title: qsTr("Hello World")
 
     Timer {
@@ -163,7 +163,7 @@ Window {
         Image {
             x: 10; y: 10
             width: 50; height: 100
-            source: "assets/rocket.jpg"
+            source: "assets/img1.jpg"
             fillMode: Image.PreserveAspectCrop
             clip: false
 
@@ -187,10 +187,16 @@ Window {
         Image {
             anchors.fill: parent
             x: 10; y: 10
-            source: "assets/rocket.jpg"
+            source: "assets/img1.jpg"
             fillMode: Image.PreserveAspectCrop
             clip: true
 
         }
     }
+
+
+//    Transformation {
+
+//    }
+
 }
