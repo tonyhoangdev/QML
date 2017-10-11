@@ -17,4 +17,9 @@
         <year>2002</year>
         <author>Matthias Kalle Dalheimer</author>
     </book>
+    <book type="Minh Hoang">
+        <title>Minh Qt</title>
+        <year>2017</year>
+        <author>HTM</author>
+    </book>
  </catalog>

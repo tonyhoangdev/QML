@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="iso-8859-1" ?>
+<scene>
+    <item>
+        <source>ufo.qml</source>
+        <x>20</x>
+        <y>20</y>
+    </item>
+    <item>
+        <source>ufo.qml</source>
+        <x>120</x>
+        <y>20</y>
+    </item>
+    <item>
+        <source>ufo.qml</source>
+        <x>220</x>
+        <y>20</y>
+    </item>
+    <item>
+        <source>ufo.qml</source>
+        <x>220</x>
+        <y>120</y>
+    </item>
+    <item>
+        <source>rocket.qml</source>
+        <x>220</x>
+        <y>220</y>
+    </item>
+    <item>
+        <source>rocket.qml</source>
+        <x>220</x>
+        <y>520</y>
+    </item>
+ </scene>

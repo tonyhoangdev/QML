@@ -1,4 +1,4 @@
-// signal.qml
+// ConnectionType.qml
 
 import QtQuick 2.6
 
