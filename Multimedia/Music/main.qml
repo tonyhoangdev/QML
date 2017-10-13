@@ -1,8 +1,9 @@
 import QtQuick 2.6
 import QtMultimedia 5.6
 import QtQuick.Window 2.2
+import QtQuick.Controls 2.2
 
-Window {
+ApplicationWindow {
     visible: true
     width: 1024
     height: 640
@@ -42,8 +43,6 @@ Window {
                     root.curIndex = view.currentIndex
                     console.log(theModel.get(root.curIndex).title + ' selected')
                     console.log("curr: " + root.curIndex + " -- pre: " + root.preIndex)
-                    theModel.get(root.preIndex).show_button = false
-                    theModel.sync()
                 }
 
                 id: view
@@ -57,6 +56,10 @@ Window {
 
                 model: theModel
                 delegate: numberDelegate
+
+                highlight: Rectangle {
+                    color: ListView.isCurrentItem?"#333": "555"
+                }
             }
         }
 
@@ -64,9 +67,9 @@ Window {
             id: theModel
 
             ListElement {show_button: false; title: "Anh Tin Mình Đã Cho Nhau Một Kỷ Niệm (Prod.by Pharreal Phương, DSmall)";  isPlay: false; source: "play.png"; time: "01:24"; fileName: "http://10.218.141.171:8081/Anh-Tin-Minh-Da-Cho-Nhau-Mot-Ky-Niem-Prod-by-Pharreal-Phuong-DSmall-Yanbi-Yen-Le.mp3"}
-            ListElement {show_button: true; title: "Là Con Gái Phải Xinh";  isPlay: true;  source: "play.png"; time: "02:50"; fileName: "http://10.218.141.171:8081/La-Con-Gai-Phai-Xinh-Bao-Thy-Kimmese.mp3"}
+            ListElement {show_button: false; title: "Là Con Gái Phải Xinh";  isPlay: true;  source: "play.png"; time: "02:50"; fileName: "http://10.218.141.171:8081/La-Con-Gai-Phai-Xinh-Bao-Thy-Kimmese.mp3"}
             ListElement {show_button: false; title: "Xin Anh Đừng";  isPlay: false; source: "play.png"; time: "01:24"; fileName: "http://10.218.141.171:8081/Xin-Anh-Dung-Dong-Nhi.mp3"}
-            ListElement {show_button: true; title: "On Top (Remix)";  isPlay: false; source: "play.png"; time: "01:24"; fileName: "http://10.218.141.171:8081/On-Top-Remix-Dong-Nhi-Lip-B.mp3"}
+            ListElement {show_button: false; title: "On Top (Remix)";  isPlay: false; source: "play.png"; time: "01:24"; fileName: "http://10.218.141.171:8081/On-Top-Remix-Dong-Nhi-Lip-B.mp3"}
             ListElement {show_button: false; title: "Make Yourself";  isPlay: false; source: "play.png"; time: "01:24"; fileName: "http://10.218.141.171:8081/Make-Yourself-Duong-Tran-Nghia.mp3"}
             ListElement {show_button: false; title: "Cuối Cùng Anh Cũng Đến";  isPlay: false; source: "play.png"; time: "01:24"; fileName: "http://10.218.141.171:8081/Cuoi-Cung-Anh-Cung-Den-Hari-Won.mp3"}
             ListElement {show_button: false; title: "Quăng Tao Cái Boongt (Masew Remix)";  isPlay: false; source: "play.png"; time: "01:24"; fileName: "http://10.218.141.171:8081/Quang-Tao-Cai-Boong-Masew-Remix-Huynh-James-Pjnboys.mp3"}
@@ -81,44 +84,137 @@ Window {
         Component {
             id: numberDelegate
 
-            Thumbnail {
-                id: thumbnail
-                width: view.width
-                text: title
-                iconSource: source
-                color: ListView.isCurrentItem?"#444":"#222"
-                isShowButton: show_button
-
-
-
+            SwipeDelegate {
+                id: swipeDelegate
+                text: title + " - " + time
+                width: parent.width
+                leftPadding: icon.height + 2
+                hoverEnabled: true
 
                 onClicked: {
-                    root.preIndex = root.curIndex
-                    root.curIndex = index
+                    console.log("Swipe clicked")
                     view.currentIndex = index
-                    theModel.get(root.preIndex).show_button = false
                 }
 
-                onPressAndHold: {
-                    view.currentIndex = index
-                    root.curIndex = view.currentIndex
-                    theModel.get(root.curIndex).show_button = true
+                Image {
+                    id: icon
+                    width: height; height: parent.height
+                    fillMode: Image.PreserveAspectCrop
+                    asynchronous: true
+                    source: 'play.png'
+                    anchors.left: parent.left
+                    anchors.top: parent. top
+
+                    MouseArea {
+                        property bool isCurrPlay: false
+                        property bool isPrePlay: false
+
+                        anchors.fill: parent
+                        onClicked: {
+                            console.log("Image clicked: " + index)
+                            view.currentIndex = index
+                            player.source = theModel.get(view.currentIndex).fileName
+
+                            isCurrPlay = !isCurrPlay
+
+                            console.log ("image curr " + index + " play: " + isCurrPlay)
+
+                            if (isCurrPlay) {
+                                icon.source = 'pause.png';
+                                root.state = 'pause';
+                                player.play();
+                            } else {
+                                icon.source = 'play.png';
+                                root.state = 'play';
+                                player.pause();
+                            }
+
+                        }
+                    }
                 }
 
-                onReleased: {
-
+                ListView.onRemove: SequentialAnimation {
+                    PropertyAction {
+                        target: swipeDelegate
+                        property: "ListView.delayRemove"
+                        value: true
+                    }
+                    NumberAnimation {
+                        target: swipeDelegate
+                        property: "height"
+                        to: 0
+                        easing.type: Easing.InOutQuad
+                    }
+                    PropertyAction {
+                        target: swipeDelegate;
+                        property: "ListView.delayRemove";
+                        value: false
+                    }
                 }
 
-                onRemoveClicked: {
-                    console.log("Removed.. " + view.currentIndex)
-                    theModel.remove(view.currentIndex)
+                swipe.transition: Transition {
+                    SmoothedAnimation { velocity: 3; easing.type: Easing.InOutCubic }
                 }
 
-                onDeleteClicked: {
-                    console.log("Deleted.. " + view.currentIndex)
-                    theModel.remove(view.currentIndex)
+                swipe.right: Label {
+                    id: deleteLabel
+                    text: "Delete"
+                    color: "white"
+                    verticalAlignment: Label.AlignVCenter
+                    padding: 12
+                    height: parent.height
+                    anchors.right: parent.right
+
+                    SwipeDelegate.onClicked: {
+                        if (!icon.isCurrPlay) {
+                            view.model.remove(index)
+                            console.log("Deleted - " + theModel.get(root.curIndex).title)
+                        } else {
+                            console.log("Cannot delete - " + theModel.get(root.curIndex).title)
+                        }
+                    }
+
+                    background: Rectangle {
+                        color: deleteLabel.SwipeDelegate.pressed ? Qt.darker("tomato", 1.1) : "tomato"
+                    }
                 }
             }
+
+            // Thumbnail {
+            //     id: thumbnail
+            //     width: view.width
+            //     text: title
+            //     iconSource: source
+            //     color: ListView.isCurrentItem?"#444":"#222"
+            //     isShowButton: show_button
+
+            //     onClicked: {
+            //         root.preIndex = root.curIndex
+            //         root.curIndex = index
+            //         view.currentIndex = index
+            //         theModel.get(root.preIndex).show_button = false
+            //     }
+
+            //     onPressAndHold: {
+            //         view.currentIndex = index
+            //         root.curIndex = view.currentIndex
+            //         theModel.get(root.curIndex).show_button = true
+            //     }
+
+            //     onReleased: {
+
+            //     }
+
+            //     onRemoveClicked: {
+            //         console.log("Removed.. " + view.currentIndex)
+            //         theModel.remove(view.currentIndex)
+            //     }
+
+            //     onDeleteClicked: {
+            //         console.log("Deleted.. " + view.currentIndex)
+            //         theModel.remove(view.currentIndex)
+            //     }
+            // }
 
         }
 
@@ -126,10 +222,24 @@ Window {
             //player.play()
         }
 
+
+        // Text {
+        //         id: txtStart
+        //         text: '0'
+        //         color: "#333"
+        //         anchors.left: parent.left
+        //         anchors.bottom: parent.bottom
+        //         width: 20
+        //         anchors.margins: 100
+        //         font.pixelSize: 20
+        //     }
+
+
         Rectangle {
             id: progressBar
 
-            anchors.left: parent.left
+            anchors.top: view.bottom
+            anchors.left: root.left
             anchors.right: parent.right
             anchors.bottom: parent.bottom
             anchors.margins: 100
@@ -137,7 +247,9 @@ Window {
             height: 30
             color: "lightGray"
 
+
             Rectangle {
+                id: rectMid
                 anchors.left: parent.left
                 anchors.top: parent.top
                 anchors.bottom: parent.bottom
