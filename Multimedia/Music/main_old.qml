@@ -3,6 +3,12 @@ import QtMultimedia 5.6
 import QtQuick.Window 2.2
 import QtQuick.Controls 2.2
 
+ApplicationWindow {
+    visible: true
+    width: 1024
+    height: 640
+    title: qsTr("Music")
+
 
 
     Item {
@@ -30,11 +36,12 @@ import QtQuick.Controls 2.2
             border.width: 2
 
 
+
             ListView {
                 onCurrentItemChanged: {
                     root.preIndex = root.curIndex
                     root.curIndex = view.currentIndex
-                    console.log(myModel[root.curIndex].title + ' selected')
+                    console.log(theModel.get(root.curIndex).title + ' selected')
                     console.log("curr: " + root.curIndex + " -- pre: " + root.preIndex)
                 }
 
@@ -47,24 +54,32 @@ import QtQuick.Controls 2.2
                 snapMode: ListView.SnapToItem
                 boundsBehavior: Flickable.DragAndOvershootBounds
 
+                model: theModel
+                delegate: numberDelegate
 
                 highlight: Rectangle {
                     color: ListView.isCurrentItem?"#333": "555"
                 }
-
-                delegate: numberDelegate
-                model: myModel
-
-//                delegate: Rectangle {
-//                    height: 25
-//                    width: 100
-//                    Text {
-//                        text: model.modelData.showButton + " - " + model.modelData.title
-//                    }
-//                }
-
             }
         }
+
+        ListModel {
+            id: theModel
+
+            ListElement {show_button: false; title: "Anh Tin Mình Đã Cho Nhau Một Kỷ Niệm (Prod.by Pharreal Phương, DSmall)";  isPlay: false; source: "play.png"; time: "01:24"; fileName: "http://10.218.141.171:8081/Anh-Tin-Minh-Da-Cho-Nhau-Mot-Ky-Niem-Prod-by-Pharreal-Phuong-DSmall-Yanbi-Yen-Le.mp3"}
+            ListElement {show_button: false; title: "Là Con Gái Phải Xinh";  isPlay: true;  source: "play.png"; time: "02:50"; fileName: "http://10.218.141.171:8081/La-Con-Gai-Phai-Xinh-Bao-Thy-Kimmese.mp3"}
+            ListElement {show_button: false; title: "Xin Anh Đừng";  isPlay: false; source: "play.png"; time: "01:24"; fileName: "http://10.218.141.171:8081/Xin-Anh-Dung-Dong-Nhi.mp3"}
+            ListElement {show_button: false; title: "On Top (Remix)";  isPlay: false; source: "play.png"; time: "01:24"; fileName: "http://10.218.141.171:8081/On-Top-Remix-Dong-Nhi-Lip-B.mp3"}
+            ListElement {show_button: false; title: "Make Yourself";  isPlay: false; source: "play.png"; time: "01:24"; fileName: "http://10.218.141.171:8081/Make-Yourself-Duong-Tran-Nghia.mp3"}
+            ListElement {show_button: false; title: "Cuối Cùng Anh Cũng Đến";  isPlay: false; source: "play.png"; time: "01:24"; fileName: "http://10.218.141.171:8081/Cuoi-Cung-Anh-Cung-Den-Hari-Won.mp3"}
+            ListElement {show_button: false; title: "Quăng Tao Cái Boongt (Masew Remix)";  isPlay: false; source: "play.png"; time: "01:24"; fileName: "http://10.218.141.171:8081/Quang-Tao-Cai-Boong-Masew-Remix-Huynh-James-Pjnboys.mp3"}
+            ListElement {show_button: false; title: "Anh Sẽ Luôn Thật Gần";  isPlay: false; source: "play.png"; time: "01:24"; fileName: "http://10.218.141.171:8081/Anh-Se-Luon-That-Gan-Khac-Hung.mp3"}
+            ListElement {show_button: false; title: "Love You Want You (Remix)";  isPlay: false; source: "play.png"; time: "01:24"; fileName: "http://10.218.141.171:8081/Love-You-Want-You-Remix-Lip-B.mp3"}
+            ListElement {show_button: false; title: "Mình Là Gì Của Nhau (Future Bass Remix)";  isPlay: false; source: "play.png"; time: "01:24"; fileName: "http://10.218.141.171:8081/Minh-La-Gi-Cua-Nhau-Future-Bass-Remix-Lou-Hoang.mp3"}
+            ListElement {show_button: false; title: "Lạc Trôi (Masew Trap Remix)"; isPlay: false; source: "play.png"; time: "01:24"; fileName: "http://10.218.141.171:8081/Lac-Troi-Masew-Trap-Remix-Son-Tung-M-TP.mp3"}
+        }
+
+
 
         Component {
             id: numberDelegate
@@ -98,8 +113,7 @@ import QtQuick.Controls 2.2
                         onClicked: {
                             console.log("Image clicked: " + index)
                             view.currentIndex = index
-                            view.focus = true
-                            player.source = myModel[view.currentIndex].fileName
+                            player.source = theModel.get(view.currentIndex).fileName
 
                             isCurrPlay = !isCurrPlay
 
@@ -153,11 +167,10 @@ import QtQuick.Controls 2.2
 
                     SwipeDelegate.onClicked: {
                         if (!icon.isCurrPlay) {
-                            //view.model.remove(index)
-                            myModel[index].deleteRow(index)
-                            console.log("Deleted - " + myModel[root.curIndex].title)
+                            view.model.remove(index)
+                            console.log("Deleted - " + theModel.get(root.curIndex).title)
                         } else {
-                            console.log("Cannot delete - " + myModel[root.curIndex].title)
+                            console.log("Cannot delete - " + theModel.get(root.curIndex).title)
                         }
                     }
 
@@ -179,13 +192,13 @@ import QtQuick.Controls 2.2
             //         root.preIndex = root.curIndex
             //         root.curIndex = index
             //         view.currentIndex = index
-            //         myModel.get(root.preIndex).show_button = false
+            //         theModel.get(root.preIndex).show_button = false
             //     }
 
             //     onPressAndHold: {
             //         view.currentIndex = index
             //         root.curIndex = view.currentIndex
-            //         myModel.get(root.curIndex).show_button = true
+            //         theModel.get(root.curIndex).show_button = true
             //     }
 
             //     onReleased: {
@@ -194,12 +207,12 @@ import QtQuick.Controls 2.2
 
             //     onRemoveClicked: {
             //         console.log("Removed.. " + view.currentIndex)
-            //         myModel.remove(view.currentIndex)
+            //         theModel.remove(view.currentIndex)
             //     }
 
             //     onDeleteClicked: {
             //         console.log("Deleted.. " + view.currentIndex)
-            //         myModel.remove(view.currentIndex)
+            //         theModel.remove(view.currentIndex)
             //     }
             // }
 
@@ -289,7 +302,7 @@ import QtQuick.Controls 2.2
                 id: mousePlay
                 anchors.fill: parent
                 onClicked: {
-                    player.source = myModel[view.currentIndex].fileName
+                    player.source = theModel.get(view.currentIndex).fileName
                     if (root.state == 'play') {
                         root.state = 'pause';
                         player.play();
@@ -314,4 +327,4 @@ import QtQuick.Controls 2.2
         }
     }
 
-
+}

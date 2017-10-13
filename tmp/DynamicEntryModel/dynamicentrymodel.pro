@@ -4,8 +4,7 @@ QT += qml quick
 CONFIG += c++11
 
 SOURCES += main.cpp \
-    dataobject.cpp \
-    valuemodel.cpp
+    dynamicentrymodel.cpp
 
 RESOURCES += qml.qrc
 
@@ -32,5 +31,8 @@ else: unix:!android: target.path = /opt/$${TARGET}/bin
 !isEmpty(target.path): INSTALLS += target
 
 HEADERS += \
-    dataobject.h \
-    valuemodel.h
+    dynamicentrymodel.h
+
+DISTFILES += \
+    ListDelegate.qml \
+    ListHighlight.qml

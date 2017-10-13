@@ -4,8 +4,7 @@ QT += qml quick
 CONFIG += c++11
 
 SOURCES += main.cpp \
-    dataobject.cpp \
-    valuemodel.cpp
+    dataentrymodel.cpp
 
 RESOURCES += qml.qrc
 
@@ -32,5 +31,4 @@ else: unix:!android: target.path = /opt/$${TARGET}/bin
 !isEmpty(target.path): INSTALLS += target
 
 HEADERS += \
-    dataobject.h \
-    valuemodel.h
+    dataentrymodel.h

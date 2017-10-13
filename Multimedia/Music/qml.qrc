@@ -4,5 +4,6 @@
         <file>pause.png</file>
         <file>play.png</file>
         <file>Thumbnail.qml</file>
+        <file>main_old.qml</file>
     </qresource>
 </RCC>
