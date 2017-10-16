@@ -1,9 +1,7 @@
 <RCC>
     <qresource prefix="/">
         <file>main.qml</file>
-        <file>pause.png</file>
-        <file>play.png</file>
-        <file>Thumbnail.qml</file>
-        <file>main_old.qml</file>
+        <file alias="pause.png">assets/pause.png</file>
+        <file alias="play.png">assets/play.png</file>
     </qresource>
 </RCC>

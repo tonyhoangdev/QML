@@ -1,8 +1,9 @@
 #include "valuemodel.h"
+#include <QDebug>
 
 ValueModel::ValueModel(QObject *parent) : QAbstractListModel(parent)
 {
-    m_roleNames[NameRole] = "name";
+    //    m_roleNames[NameRole] = "name";
 }
 
 
@@ -13,7 +14,6 @@ ValueModel::~ValueModel()
 int ValueModel::rowCount(const QModelIndex &parent) const
 {
     Q_UNUSED(parent);
-    // return our data count
     return m_data.count();
 }
 
@@ -28,21 +28,25 @@ QVariant ValueModel::data(const QModelIndex &index, int role) const
         return QVariant();
     }
 
-    const QColor &color = m_data.at(row);
-    qDebug() << row << role << color;
+    const DataObject* data = m_data[row];
+    //qDebug() << row << role;// << data;
 
     // A model can return data for different roles.
     // The default role is the display role.
     // it can be accesses in QML with "model.display"
     switch(role) {
-    case NameRole:
-        return color.name();
-    case HueRole:
-        return color.hueF();
-    case SaturationRole:
-        return color.saturationF();
-    case BrightnessRole:
-        return color.lightnessF();
+    case ShowButtonRole:
+        return data->showButton();
+    case TitleRole:
+        return data->title();
+    case IsPlayRole:
+        return data->isPlay();
+    case SourceRole:
+        return data->source();
+    case TimeRole:
+        return data->time();
+    case FileNameRole:
+        return data->fileName();
     }
     // The view asked for other data, just return an empty QVariant
     return QVariant();
@@ -50,45 +54,55 @@ QVariant ValueModel::data(const QModelIndex &index, int role) const
 
 QHash<int, QByteArray> ValueModel::roleNames() const
 {
-    return m_roleNames;
+    QHash<int, QByteArray> roles;
+    roles[ShowButtonRole] = "showButton";
+    roles[TitleRole] = "title";
+    roles[IsPlayRole] = "isPlay";
+    roles[SourceRole] = "source";
+    roles[TimeRole] = "time";
+    roles[FileNameRole] = "fileName";
+
+    return roles;
+
 }
 
-
-void ValueModel::insert(int index, const QString &colorValue)
+void ValueModel::addObject(const DataObject &data)
 {
-    if(index < 0 || index > m_data.count()) {
-        return;
-    }
-    QColor color(colorValue);
-    if(!color.isValid()) {
-        return;
-    }
-    // view protocol (begin => manipulate => end]
-    emit beginInsertRows(QModelIndex(), index, index);
-    m_data.insert(index, colorValue);
-    emit endInsertRows();
-    // update our count property
-    emit countChanged(m_data.count());
+    beginInsertRows(QModelIndex(), rowCount(), rowCount());
+    m_data.append(const_cast<DataObject*>(&data));
+    endInsertRows();
 }
 
-void ValueModel::append(const QString &colorValue)
-{
-    insert(count(), colorValue);
-}
-
-void ValueModel::remove(int index)
+void ValueModel::deleteRow(int index)
 {
     if(index < 0 || index >= m_data.count()) {
         return;
     }
-    emit beginRemoveRows(QModelIndex(), index, index);
+    beginRemoveRows(QModelIndex(), index, index);
     m_data.removeAt(index);
-    emit endRemoveRows();
-    // do not forget to update our count property
-    emit countChanged(m_data.count());
+    endRemoveRows();
 }
 
-int ValueModel::count() const
+DataObject* ValueModel::get(int index)
 {
-    return m_data.count();
+    if(index < 0 || index >= m_data.count()) {
+        return 0;
+    }
+
+    return m_data[index];
+}
+
+void ValueModel::set(int row, const DataObject * data)
+{
+    if (row < 0 || row >= m_data.count()) {
+        return;
+    }
+    m_data.replace(row, const_cast<DataObject *>(data));
+    emit dataChanged(this->index(row), this->index(row));
+}
+
+// refresh a single row
+void ValueModel::refreshRow(int row)
+{
+    emit dataChanged(index(row), index(row));
 }

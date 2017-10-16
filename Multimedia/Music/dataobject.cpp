@@ -1,4 +1,5 @@
 #include "dataobject.h"
+#include <QDebug>
 
 DataObject::DataObject(QObject *parent) : QObject(parent)
 {
@@ -36,16 +37,38 @@ bool DataObject::isPlay() const
 }
 void DataObject::setIsPlay(const bool &isPlay)
 {
-    m_isPlay = isPlay;
+    qDebug() << "Set Is Play: " << isPlay;
+
+    if (m_isPlay != isPlay)
+    {
+        m_isPlay = isPlay;
+        if (!isPlay)
+        {
+            setSource("play.png");
+        }
+        else
+        {
+            setSource("pause.png");
+        }
+
+        emit isPlayChanged(isPlay);
+    }
+
 }
 
 QString DataObject::source() const
 {
     return m_source;
 }
+
 void DataObject::setSource(const QString &source)
 {
-    m_source = source;
+    if (m_source != source)
+    {
+        m_source = source;
+
+        emit sourceChanged(source);
+    }
 }
 
 QString DataObject::time() const
@@ -64,10 +87,4 @@ QString DataObject::fileName() const
 void DataObject::setFileName(const QString &fileName)
 {
     m_fileName = fileName;
-}
-
-
-void DataObject::deleteRow(int index)
-{
-    qDebug() << "Send: " << index;
 }

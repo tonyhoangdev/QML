@@ -2,7 +2,6 @@
 #define DATAOBJECT_H
 
 #include <QObject>
-#include <QDebug>
 
 class DataObject : public QObject
 {
@@ -25,19 +24,16 @@ public:
     void setTitle(const QString &title);
 
     bool isPlay() const;
-    void setIsPlay(const bool &isPlay);
+
 
     QString source() const;
-    void setSource(const QString &source);
+
 
     QString time() const;
     void setTime(const QString &time);
 
     QString fileName() const;
     void setFileName(const QString &fileName);
-
-    Q_INVOKABLE void deleteRow(int index);
-
 
 private:
     bool m_showButton;
@@ -50,12 +46,14 @@ private:
 signals:
     void showButtonChanged();
     void titleChanged();
-    void isPlayChanged();
-    void sourceChanged();
+    void isPlayChanged(bool isPlay);
+    void sourceChanged(QString source);
     void timeChanged();
     void fileNameChanged();
 
 public slots:
+    void setIsPlay(const bool &isPlay);
+    void setSource(const QString &source);
 };
 
 #endif // DATAOBJECT_H
