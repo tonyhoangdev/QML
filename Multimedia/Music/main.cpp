@@ -20,8 +20,8 @@ int main(int argc, char *argv[])
     ValueModel dataModel;
 
     // Gets files on folder
-    //QString folderMusic = "C:/Users/minh.hoang/Music/LenMood";
-    QString folderMusic = QDir::currentPath()  + "/data";
+    QString folderMusic = "C:/Users/minh.hoang/Music/LenMood";
+    //QString folderMusic = QDir::currentPath()  + "/data";
     QString ipMusic = "http://10.218.141.171:8081";
     QDir dir(folderMusic);
 
@@ -47,7 +47,7 @@ int main(int argc, char *argv[])
     ctxt->setContextProperty("myModel", &dataModel);
     view.setSource(QUrl("qrc:///main.qml"));
     view.show();
-
+    view.setGeometry(0,0, 800, 600);
 //    QObject *pRootObject = dynamic_cast<QObject*>(view.rootObject());
 //    QObject *pobjFrame = pRootObject->findChild<QObject *>("txtPath");
 //    pobjFrame->setProperty("text", folderMusic);

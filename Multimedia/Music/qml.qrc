@@ -3,5 +3,7 @@
         <file>main.qml</file>
         <file alias="pause.png">assets/pause.png</file>
         <file alias="play.png">assets/play.png</file>
+        <file alias="next.png">assets/media_btn_next_pre.png</file>
+        <file alias="prev.png">assets/media_btn_prev_pre.png</file>
     </qresource>
 </RCC>

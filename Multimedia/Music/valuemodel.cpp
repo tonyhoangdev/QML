@@ -4,6 +4,7 @@
 ValueModel::ValueModel(QObject *parent) : QAbstractListModel(parent)
 {
     //    m_roleNames[NameRole] = "name";
+    setCurrentId(0);
 }
 
 
@@ -105,4 +106,34 @@ void ValueModel::set(int row, const DataObject * data)
 void ValueModel::refreshRow(int row)
 {
     emit dataChanged(index(row), index(row));
+}
+
+int ValueModel::currentId() const
+{
+    return m_currentId;
+}
+
+void ValueModel::setCurrentId(int currentId)
+{
+    if (m_currentId == currentId)
+        return;
+
+    m_currentId = currentId;
+    emit currentIdChanged(m_currentId);
+}
+
+void ValueModel::next()
+{
+    m_currentId = (m_currentId % m_data.count()) + 1;
+
+    qDebug() << "next current_id: " << m_currentId;
+    emit currentIdChanged(m_currentId);
+}
+
+void ValueModel::prev()
+{
+    m_currentId = (m_currentId - 1 + (m_data.count() - 1)) % m_data.count() + 1;
+
+    qDebug() << "prev current_id: " << m_currentId;
+    emit currentIdChanged(m_currentId);
 }

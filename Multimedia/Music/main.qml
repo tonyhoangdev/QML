@@ -15,7 +15,7 @@ Item {
 
     property int preIndex: 0
     property int curIndex: 0
-    property int indexPlay: 0
+    property int indexPlay: myModel.currentId
 
     Rectangle {
         anchors.rightMargin: 500
@@ -103,9 +103,11 @@ Item {
                         if (myModel.get(index).isPlay && (index != root.indexPlay)) {
                             myModel.get(root.indexPlay).setIsPlay(false);
                             myModel.refreshRow(root.indexPlay);
-                            root.indexPlay = index;
+                            myModel.setCurrentId(index)
+                            //root.indexPlay = index;
                         } else {
-                            root.indexPlay = index;
+                            myModel.setCurrentId(index)
+                            //root.indexPlay = index;
                         }
 
                         if (myModel.get(index).isPlay) {
@@ -156,7 +158,8 @@ Item {
                     if (!myModel.get(index).isPlay) {
                         console.log("Deleted - " + myModel.get(index).title)
                         if (index < root.indexPlay) {
-                            root.indexPlay = root.indexPlay - 1
+                            myModel.setCurrentId(root.indexPlay - 1)
+                            //                            root.indexPlay = root.indexPlay - 1
                         }
                         myModel.deleteRow(index)
                     } else {
@@ -209,40 +212,101 @@ Item {
     }
 
 
-//    Rectangle {
-//        id: play
-//        width: 100
-//        height: 100
+    Rectangle {
+        id: prev
+        width: 100
+        height: 100
 
-//        anchors.top: progressBar.bottom
-//        anchors.left: parent.left
-//        anchors.leftMargin: 100
+        anchors.top: progressBar.bottom
+        anchors.left: parent.left
+        anchors.leftMargin: 100
 
-//        Image {
-//            id: imagePlay
-//            anchors.fill: parent
-//            source: myModel.get(root.indexPlay).source
-//        }
+        Image {
+            id: imagePrev
+            anchors.fill: parent
+            source: "prev.png"
+        }
 
-//        MouseArea {
-//            id: mousePlay
-//            anchors.fill: parent
-//            onClicked: {
-//                player.source = myModel.get(root.indexPlay).fileName
-//                imagePlay.source = myModel.get(root.indexPlay).source
-//                myModel.get(root.indexPlay).setIsPlay(!myModel.get(root.indexPlay).isPlay)
-//                myModel.refreshRow(root.indexPlay);
-//                if (myModel.get(root.indexPlay).isPlay) {
-//                    player.play();
-//                } else {
-//                    player.pause();
-//                }
-//                console.log("======================")
-//                console.log(root.indexPlay)
-//            }
-//        }
+        MouseArea {
+            id: mousePrev
+            anchors.fill: parent
+            onClicked: {
+                myModel.prev();
+                player.source = myModel.get(root.indexPlay).fileName
+                myModel.refreshRow(root.indexPlay);
+                if (myModel.get(root.indexPlay).isPlay) {
+                    player.play();
+                } else {
+                    player.pause();
+                }
+                console.log(player.source);
+            }
+        }
+    }
 
-//    }
+
+    Rectangle {
+        id: play
+        width: 100
+        height: 100
+
+        anchors.top: progressBar.bottom
+        anchors.left: prev.right
+
+        Image {
+            id: imagePlay
+            anchors.fill: parent
+            source: "play.png"
+        }
+
+        MouseArea {
+            id: mousePlay
+            anchors.fill: parent
+            onClicked: {
+                player.source = myModel.get(root.indexPlay).fileName
+                imagePlay.source = myModel.get(root.indexPlay).source
+                myModel.get(root.indexPlay).setIsPlay(!myModel.get(root.indexPlay).isPlay)
+                myModel.refreshRow(root.indexPlay);
+                if (myModel.get(root.indexPlay).isPlay) {
+                    player.play();
+                } else {
+                    player.pause();
+                }
+            }
+        }
+
+    }
+
+    Rectangle {
+        id: next
+        width: 100
+        height: 100
+
+        anchors.top: progressBar.bottom
+        anchors.left: play.right
+
+        Image {
+            id: imageNext
+            anchors.fill: parent
+            source: "next.png"
+        }
+
+        MouseArea {
+            id: mouseNext
+            anchors.fill: parent
+            onClicked: {
+                myModel.next();
+                player.source = myModel.get(root.indexPlay).fileName
+                myModel.refreshRow(root.indexPlay);
+                if (myModel.get(root.indexPlay).isPlay) {
+                    player.play();
+                } else {
+                    player.pause();
+                }
+                console.log(player.source);
+            }
+        }
+    }
 
     Connections {
         target: player
@@ -253,35 +317,35 @@ Item {
         }
     }
 
-//    Rectangle {
-//        x: -4
-//        y: 2
-//        anchors.bottomMargin: 100
-//        anchors.leftMargin: 549
-//        anchors.bottom: progressBar.top
-//        ListView {
-//            id: view1
-//            highlight: Rectangle {
-//                color: ListView.isCurrentItem?"#333": "555"
-//            }
-//            boundsBehavior: Flickable.DragAndOvershootBounds
-//            snapMode: ListView.SnapToItem
-//            anchors.fill: parent
-//            anchors.margins: 2
-//            clip: true
-//            delegate: numberDelegate
-//            model: myModel
-//            focus: true
-//        }
-//        anchors.right: parent.right
-//        anchors.rightMargin: 51
-//        border.color: "#333333"
-//        anchors.margins: 100
-//        anchors.topMargin: 62
-//        border.width: 2
-//        anchors.top: parent.top
-//        anchors.left: parent.left
-//    }
+    //    Rectangle {
+    //        x: -4
+    //        y: 2
+    //        anchors.bottomMargin: 100
+    //        anchors.leftMargin: 549
+    //        anchors.bottom: progressBar.top
+    //        ListView {
+    //            id: view1
+    //            highlight: Rectangle {
+    //                color: ListView.isCurrentItem?"#333": "555"
+    //            }
+    //            boundsBehavior: Flickable.DragAndOvershootBounds
+    //            snapMode: ListView.SnapToItem
+    //            anchors.fill: parent
+    //            anchors.margins: 2
+    //            clip: true
+    //            delegate: numberDelegate
+    //            model: myModel
+    //            focus: true
+    //        }
+    //        anchors.right: parent.right
+    //        anchors.rightMargin: 51
+    //        border.color: "#333333"
+    //        anchors.margins: 100
+    //        anchors.topMargin: 62
+    //        border.width: 2
+    //        anchors.top: parent.top
+    //        anchors.left: parent.left
+    //    }
 
     Text {
         id: txtTime

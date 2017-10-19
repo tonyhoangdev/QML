@@ -8,6 +8,8 @@
 class ValueModel : public QAbstractListModel
 {
     Q_OBJECT
+    Q_PROPERTY(int currentId READ currentId WRITE setCurrentId NOTIFY currentIdChanged)
+
 public:
     explicit ValueModel(QObject *parent = nullptr);
     ~ValueModel();
@@ -30,13 +32,24 @@ public:
     Q_INVOKABLE void set(int row, const DataObject * data);
     Q_INVOKABLE void refreshRow(int row);
 
+
+    int currentId() const;
+
+    Q_INVOKABLE void next();
+    Q_INVOKABLE void prev();
+
+signals:
+    void currentIdChanged(int currentId);
+
 public slots:
+    void setCurrentId(int currentId);
 
 protected:
     QHash<int, QByteArray> roleNames() const;
 
 private:
     QList<DataObject*> m_data;
+    int m_currentId;
 
 signals:
 };
